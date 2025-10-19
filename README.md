@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mistrzostwa Bieżanowa
 
-## Getting Started
+System zarządzania turniejami EA FC 25 dla Mistrzostw Bieżanowa.
 
-First, run the development server:
+## 🚀 Szybki Start
 
+### 1. Instalacja zależności
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Konfiguracja bazy danych Supabase
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+⚠️ **WAŻNE**: Aplikacja obecnie działa w trybie demo. Aby uzyskać pełną funkcjonalność, musisz skonfigurować prawdziwą bazę danych Supabase.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Kroki konfiguracji:
 
-## Learn More
+1. **Utwórz projekt Supabase:**
+   - Idź na [https://supabase.com](https://supabase.com)
+   - Zaloguj się lub utwórz konto
+   - Utwórz nowy projekt
 
-To learn more about Next.js, take a look at the following resources:
+2. **Pobierz dane konfiguracyjne:**
+   - W Dashboard Supabase idź do `Settings > API`
+   - Skopiuj `Project URL`
+   - Skopiuj `anon public` key
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Skonfiguruj zmienne środowiskowe:**
+   - Otwórz plik `.env.local`
+   - Zastąp `https://placeholder.supabase.co` swoim Project URL
+   - Zastąp `placeholder_key_for_demo` swoim anon key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. **Utwórz strukturę bazy danych:**
+   - W Supabase idź do `SQL Editor`
+   - Skopiuj całą zawartość pliku `database-schema.sql`
+   - Wklej i uruchom SQL
 
-## Deploy on Vercel
+5. **Zrestartuj aplikację:**
+   ```bash
+   # Zatrzymaj aplikację (Ctrl+C)
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Uruchomienie aplikacji
+```bash
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Aplikacja będzie dostępna pod adresem [http://localhost:3000](http://localhost:3000)
+
+## 📋 Funkcje
+
+- ✅ **Zarządzanie turniejami** - tworzenie, edycja, usuwanie turniejów
+- ✅ **Profile graczy** - szczegółowe statystyki i historia meczów  
+- ✅ **System osiągnięć** - trofea i nagrody za wyniki
+- ✅ **Panel administratora** - pełne zarządzanie systemem
+- ✅ **Automatyczny terminarz** - generowanie harmonogramu round-robin
+- ✅ **Tabele ligowe** - automatyczne obliczanie wyników
+
+## 🔧 Panel Administratora
+
+Po skonfigurowaniu bazy danych, panel administratora będzie dostępny pod `/admin` i umożliwi:
+
+- Tworzenie nowych turniejów z automatycznym terminarzem
+- Zarządzanie graczami i drużynami
+- Wprowadzanie wyników meczów
+- Generowanie archiwów turniejów
+
+## 🎯 Tryb Demo vs Produkcja
+
+- **Tryb Demo**: Używa mock danych, funkcje zarządzania wyłączone
+- **Tryb Produkcja**: Pełna funkcjonalność z prawdziwą bazą danych
+
+Aplikacja automatycznie wykrywa tryb na podstawie konfiguracji w `.env.local`.
