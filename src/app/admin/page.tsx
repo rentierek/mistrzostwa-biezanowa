@@ -8,6 +8,7 @@ import { AdminPlayerPanel } from '@/components/admin/AdminPlayerPanel';
 import { AdminTeamPanel } from '@/components/admin/AdminTeamPanel';
 import { AdminMatchPanel } from '@/components/admin/AdminMatchPanel';
 import { AdminAchievementPanel } from '@/components/admin/AdminAchievementPanel';
+import { AdminBettingPanel } from '@/components/admin/AdminBettingPanel';
 
 export default function AdminPage() {
   const { isAdmin } = useAdmin();
@@ -72,6 +73,11 @@ export default function AdminPage() {
           {/* Achievement Management */}
           <section className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
             <AdminAchievementPanel />
+          </section>
+
+          {/* Betting Management */}
+          <section className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <AdminBettingPanel />
           </section>
 
           {/* Future Admin Features */}

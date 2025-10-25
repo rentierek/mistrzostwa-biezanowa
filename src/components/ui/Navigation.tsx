@@ -14,7 +14,8 @@ import {
   X,
   Lock,
   LogOut,
-  Shield
+  Shield,
+  DollarSign
 } from 'lucide-react';
 import { useAdmin } from '@/contexts/AdminContext';
 import { AdminLoginModal } from './AdminLoginModal';
@@ -48,6 +49,7 @@ export const Navigation: React.FC = () => {
     { href: '/archives', label: 'Archiwum', icon: Archive },
     { href: '/players', label: 'Gracze', icon: Users },
     { href: '/stats', label: 'Statystyki', icon: BarChart3 },
+    { href: '/betting', label: 'Betowanie', icon: DollarSign },
     { href: '/draw', label: 'Losowanie Drużyn', icon: Shuffle },
     ...(isAdmin ? [{ href: '/admin', label: 'Panel Admin', icon: Shield }] : []),
   ];

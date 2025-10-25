@@ -134,3 +134,99 @@ export interface GlobalStats {
   bestGoalDifference: { nickname: string; difference: number } | null;
   mostTournaments: { nickname: string; tournaments: number } | null;
 }
+
+// Betting System Types
+export interface BettingCoupon {
+  id: string;
+  tournament_id: string;
+  player_id: string;
+  coupon_name: string;
+  created_at: string;
+  updated_at: string;
+  is_submitted: boolean;
+  total_points: number;
+  // Relations
+  tournament?: Tournament;
+  player?: Player;
+  predictions?: BettingPrediction[];
+}
+
+export interface BettingPrediction {
+  id: string;
+  coupon_id: string;
+  prediction_type: string;
+  prediction_value: string;
+  points_awarded: number;
+  is_correct: boolean | null;
+  created_at: string;
+  // Relations
+  coupon?: BettingCoupon;
+  prediction_type_info?: BettingPredictionType;
+}
+
+export interface BettingPredictionType {
+  id: string;
+  type_name: string;
+  display_name: string;
+  description?: string;
+  points_for_correct: number;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface BettingPlayerStats {
+  id: string;
+  player_id: string;
+  total_coupons: number;
+  total_points: number;
+  correct_predictions: number;
+  total_predictions: number;
+  accuracy_percentage: number;
+  best_coupon_points: number;
+  gambling_king_awards: number;
+  dark_horse_awards: number;
+  created_at: string;
+  updated_at: string;
+  // Relations
+  player?: Player;
+}
+
+export interface BettingAchievement {
+  id: string;
+  tournament_id: string;
+  player_id: string;
+  achievement_type: 'gambling_king' | 'dark_horse' | 'perfect_predictor';
+  achievement_name: string;
+  description?: string;
+  points_earned: number;
+  created_at: string;
+  // Relations
+  tournament?: Tournament;
+  player?: Player;
+}
+
+// Betting Form Types
+export interface BettingFormData {
+  coupon_name: string;
+  tournament_id: string;
+  player_id: string;
+  predictions: {
+    goals_over_under?: 'over' | 'under';
+    final_ranking?: string[]; // Array of player IDs in predicted order
+    top_scorer?: string; // Player ID
+    worst_defense?: string; // Player ID
+    tournament_winner?: string; // Player ID
+    surprise_player?: string; // Player ID
+  };
+}
+
+export interface BettingRankingEntry {
+  player_id: string;
+  nickname: string;
+  total_points: number;
+  total_coupons: number;
+  accuracy_percentage: number;
+  gambling_king_awards: number;
+  dark_horse_awards: number;
+  position: number;
+}

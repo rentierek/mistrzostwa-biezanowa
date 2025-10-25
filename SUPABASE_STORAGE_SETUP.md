@@ -14,10 +14,11 @@ The application requires two storage buckets to be created in your Supabase proj
 - **Purpose**: Stores tournament photos, videos, and thumbnails
 - **Used by**: Tournament media upload functionality
 - **File types**: Images and videos
-- **Path structure**: 
-  - Photos: `tournament-media/photos/{tournamentId}-{timestamp}.{extension}`
-  - Videos: `tournament-media/videos/{tournamentId}-{timestamp}.{extension}`
-  - Thumbnails: `tournament-media/thumbnails/{tournamentId}-{timestamp}.{extension}`
+- **Path structure in bucket**: 
+  - Photos: `photos/{tournamentId}-photo-{timestamp}.{extension}`
+  - Videos: `videos/{tournamentId}-video-{timestamp}.{extension}`
+  - Thumbnails: `thumbnails/{tournamentId}-thumbnail-{timestamp}.{extension}`
+- **Full URL structure**: `https://[project].supabase.co/storage/v1/object/public/tournament-media/photos/...`
 
 ## How to Create Storage Buckets
 

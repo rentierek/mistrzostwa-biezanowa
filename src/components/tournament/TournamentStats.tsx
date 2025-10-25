@@ -5,6 +5,7 @@ import { getMatchesForTournament, getLeagueTable } from '@/lib/supabase';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { LeagueTable } from '@/components/tournament/LeagueTable';
 import { MatchesList } from '@/components/tournament/MatchesList';
+import TournamentAwardsAnimation from '@/components/tournament/TournamentAwardsAnimation';
 import { Trophy, Calendar, Users, Target, Award, TrendingUp, Crown, Shield, Zap, RefreshCw } from 'lucide-react';
 import { Tournament, MatchWithDetails, LeagueTableEntry } from '@/types/database';
 
@@ -19,6 +20,8 @@ export function TournamentStats({ tournament, initialMatches, initialLeagueTable
   const [leagueTable, setLeagueTable] = useState<LeagueTableEntry[]>(initialLeagueTable);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  const [isClient, setIsClient] = useState(false);
+  const [showAwardsAnimation, setShowAwardsAnimation] = useState(false);
 
   const refreshData = useCallback(async () => {
     try {
@@ -37,6 +40,11 @@ export function TournamentStats({ tournament, initialMatches, initialLeagueTable
       setIsRefreshing(false);
     }
   }, [tournament.id]);
+
+  // Set client-side flag to prevent hydration mismatch
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Auto-refresh every 30 seconds for active tournaments
   useEffect(() => {
@@ -76,14 +84,25 @@ export function TournamentStats({ tournament, initialMatches, initialLeagueTable
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-bold">{tournament.name}</h1>
-          <button
-            onClick={refreshData}
-            disabled={isRefreshing}
-            className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            Odśwież
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Awards Animation Button */}
+            <button
+              onClick={() => setShowAwardsAnimation(true)}
+              className="flex items-center gap-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              <Award className="w-5 h-5" />
+              Ceremonia Nagród
+            </button>
+            
+            <button
+              onClick={refreshData}
+              disabled={isRefreshing}
+              className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors disabled:opacity-50"
+            >
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              Odśwież
+            </button>
+          </div>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -94,9 +113,11 @@ export function TournamentStats({ tournament, initialMatches, initialLeagueTable
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <div className="text-sm opacity-75">
-              Ostatnia aktualizacja: {lastRefresh.toLocaleTimeString('pl-PL')}
-            </div>
+            {isClient && (
+              <div className="text-sm opacity-75">
+                Ostatnia aktualizacja: {lastRefresh.toLocaleTimeString('pl-PL')}
+              </div>
+            )}
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-400 rounded-full text-sm font-medium">
               <Trophy size={14} />
               {tournament.is_active ? 'Aktywny' : 'Zakończony'}
@@ -353,6 +374,14 @@ export function TournamentStats({ tournament, initialMatches, initialLeagueTable
           </div>
         </CardContent>
       </Card>
+
+      {/* Awards Animation */}
+      {showAwardsAnimation && (
+        <TournamentAwardsAnimation
+          leagueTable={leagueTable}
+          onClose={() => setShowAwardsAnimation(false)}
+        />
+      )}
     </div>
   );
 }

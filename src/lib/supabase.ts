@@ -8,7 +8,14 @@ import {
   LeagueTableEntry, 
   MatchWithDetails,
   PlayerStats,
-  TopScorer
+  TopScorer,
+  BettingCoupon,
+  BettingPrediction,
+  BettingPredictionType,
+  BettingPlayerStats,
+  BettingAchievement,
+  BettingFormData,
+  BettingRankingEntry
 } from '@/types/database';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -948,6 +955,83 @@ export async function getPlayerAchievements(playerId: string): Promise<Achieveme
 
   if (error) {
     console.error('Error fetching player achievements:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+// Get tournament achievements
+export async function getTournamentAchievements(tournamentId: string): Promise<Achievement[]> {
+  if (isDemoMode) {
+    // Return mock achievements for demo
+    const mockAchievements: Achievement[] = [
+      {
+        id: 'achievement-1',
+        player_id: 'player-grzesiu',
+        tournament_id: tournamentId,
+        achievement_type: 'tournament_winner',
+        achievement_rank: 1,
+        title: '🥇 Mistrz Turnieju',
+        description: 'Zwyciężca turnieju',
+        icon_url: '/icons/trophy-gold.svg',
+        value: 18,
+        achievement_date: '2024-11-30T00:00:00Z',
+        created_at: '2024-11-30T00:00:00Z'
+      },
+      {
+        id: 'achievement-2',
+        player_id: 'player-wilku',
+        tournament_id: tournamentId,
+        achievement_type: 'tournament_winner',
+        achievement_rank: 2,
+        title: '🥈 Wicemistrz Turnieju',
+        description: 'Drugie miejsce w turnieju',
+        icon_url: '/icons/trophy-silver.svg',
+        value: 15,
+        achievement_date: '2024-11-30T00:00:00Z',
+        created_at: '2024-11-30T00:00:00Z'
+      },
+      {
+        id: 'achievement-3',
+        player_id: 'player-kuba',
+        tournament_id: tournamentId,
+        achievement_type: 'tournament_winner',
+        achievement_rank: 3,
+        title: '🥉 Trzecie Miejsce',
+        description: 'Trzecie miejsce w turnieju',
+        icon_url: '/icons/trophy-bronze.svg',
+        value: 12,
+        achievement_date: '2024-11-30T00:00:00Z',
+        created_at: '2024-11-30T00:00:00Z'
+      },
+      {
+        id: 'achievement-4',
+        player_id: 'player-grzesiu',
+        tournament_id: tournamentId,
+        achievement_type: 'top_scorer',
+        title: '⚽ Król Strzelców',
+        description: 'Najwięcej bramek w turnieju (12 bramek)',
+        icon_url: '/icons/soccer-ball.svg',
+        value: 12,
+        achievement_date: '2024-11-30T00:00:00Z',
+        created_at: '2024-11-30T00:00:00Z'
+      }
+    ];
+    return mockAchievements;
+  }
+
+  const { data, error } = await supabase
+    .from('achievements')
+    .select(`
+      *,
+      player:players(*)
+    `)
+    .eq('tournament_id', tournamentId)
+    .order('achievement_rank', { ascending: true, nullsFirst: false });
+
+  if (error) {
+    console.error('Error fetching tournament achievements:', error);
     return [];
   }
 
@@ -1904,7 +1988,7 @@ export async function uploadTournamentPhoto(tournamentId: string, file: File): P
     // Generate a unique filename
     const fileExt = file.name.split('.').pop();
     const fileName = `${tournamentId}-photo-${Date.now()}.${fileExt}`;
-    const filePath = `tournament-media/${tournamentId}/photos/${fileName}`;
+    const filePath = `photos/${fileName}`;
 
     // Upload file to Supabase storage
     const { data: uploadData, error: uploadError } = await supabase.storage
@@ -1940,7 +2024,7 @@ export async function uploadTournamentVideo(tournamentId: string, file: File): P
     // Generate a unique filename
     const fileExt = file.name.split('.').pop();
     const fileName = `${tournamentId}-video-${Date.now()}.${fileExt}`;
-    const filePath = `tournament-media/${tournamentId}/videos/${fileName}`;
+    const filePath = `videos/${fileName}`;
 
     // Upload file to Supabase storage
     const { data: uploadData, error: uploadError } = await supabase.storage
@@ -1983,7 +2067,7 @@ export async function uploadTournamentThumbnail(tournamentId: string, file: File
     // Generate a unique filename
     const fileExt = file.name.split('.').pop();
     const fileName = `${tournamentId}-thumbnail-${Date.now()}.${fileExt}`;
-    const filePath = `tournament-media/${tournamentId}/thumbnails/${fileName}`;
+    const filePath = `thumbnails/${fileName}`;
 
     // Upload file to Supabase storage
     const { data: uploadData, error: uploadError } = await supabase.storage

@@ -18,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pl">
-      <body className={`${inter.className} transition-colors duration-300`} style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+    <html lang="pl" suppressHydrationWarning>
+      <body className={`${inter.className} transition-colors duration-300`} style={{ background: 'var(--background)', color: 'var(--foreground)' }} suppressHydrationWarning>
         <ThemeProvider>
           <AdminProvider>
             <Navigation />
